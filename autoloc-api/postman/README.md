@@ -4,7 +4,7 @@
 
 Import `AutoLoc-Atelier5.postman_collection.json` in Postman. The collection runs the CRUD sequence for Agence, Client, and Vehicule and checks the HTTP status for every request.
 
-The default `baseUrl` is `http://localhost:8081`. Start the application before running the collection.
+The collection variable `baseUrl` is `http://localhost:8080/api`. Start the application before running the collection.
 
 ## Run with MySQL
 
@@ -27,6 +27,6 @@ $env:SPRING_JPA_HIBERNATE_DDL_AUTO = 'create-drop'
 ./mvnw.cmd spring-boot:run '-Dspring-boot.run.useTestClasspath=true'
 ```
 
-Open `http://localhost:8081/swagger-ui.html`; it redirects to Swagger UI. The OpenAPI document is available at `http://localhost:8081/v3/api-docs`.
+Open `http://localhost:8080/api/swagger-ui.html`; it redirects to Swagger UI. The OpenAPI document is available at `http://localhost:8080/api/v3/api-docs`.
 
-The `captures` directory contains the Swagger UI screenshot and the Newman JSON execution report produced by the collection run.
+The `captures` directory contains the Swagger UI screenshot, the generated OpenAPI document, and the Newman JSON execution report produced by the collection run.

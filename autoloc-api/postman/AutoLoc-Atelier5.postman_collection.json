@@ -1,12 +1,12 @@
 {
   "info": {
-    "name": "AutoLoc API - Atelier 5",
-    "description": "Scenarios CRUD sequentiels pour Agence, Client et Vehicule. Importer dans Postman, demarrer l'API, puis lancer toute la collection.",
+    "name": "AutoLoc - Atelier 5 complet",
+    "description": "Scenarios nominaux, erreurs 400/404, paiement en lecture seule et cascade Contrat-Paiement. Demarrer l API avant de lancer la collection.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Agences - POST creer",
+      "name": "Agence - POST create",
       "request": {
         "method": "POST",
         "header": [
@@ -15,10 +15,10 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/agences",
+        "url": "{{baseUrl}}/agences",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nom\": \"Agence Postman\",\n  \"ville\": \"Tunis\",\n  \"adresse\": \"Avenue Habib Bourguiba\",\n  \"telephone\": \"71000000\"\n}",
+          "raw": "{\n  \"nom\": \"Agence Atelier\",\n  \"ville\": \"Tunis\",\n  \"adresse\": \"Avenue Test\",\n  \"telephone\": \"71000000\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -32,20 +32,19 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('POST renvoie 200', () => pm.response.to.have.status(200));",
-              "const entity = pm.response.json(); pm.expect(entity.idAgence).to.exist;",
-              "pm.collectionVariables.set('agenceId', entity.idAgence);"
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "const x=pm.response.json(); pm.expect(x.idAgence).to.exist; pm.collectionVariables.set('agenceId',x.idAgence);"
             ]
           }
         }
       ]
     },
     {
-      "name": "Agences - GET tous",
+      "name": "Agence - GET list",
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{baseUrl}}/api/agences"
+        "url": "{{baseUrl}}/agences"
       },
       "event": [
         {
@@ -53,7 +52,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('GET tous renvoie 200', () => pm.response.to.have.status(200));",
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
               "pm.expect(pm.response.json()).to.be.an('array');"
             ]
           }
@@ -61,11 +60,11 @@
       ]
     },
     {
-      "name": "Agences - GET par ID",
+      "name": "Agence - GET by id",
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{baseUrl}}/api/agences/{{agenceId}}"
+        "url": "{{baseUrl}}/agences/{{agenceId}}"
       },
       "event": [
         {
@@ -73,14 +72,14 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('GET par ID renvoie 200', () => pm.response.to.have.status(200));"
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
             ]
           }
         }
       ]
     },
     {
-      "name": "Agences - PUT modifier",
+      "name": "Agence - PUT update",
       "request": {
         "method": "PUT",
         "header": [
@@ -89,10 +88,10 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/agences/{{agenceId}}",
+        "url": "{{baseUrl}}/agences/{{agenceId}}",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nom\": \"Agence Postman modifi?e\",\n  \"ville\": \"Ariana\",\n  \"adresse\": \"Rue de Test\",\n  \"telephone\": \"71000001\"\n}",
+          "raw": "{\n  \"nom\": \"Agence Atelier Modifiee\",\n  \"ville\": \"Ariana\",\n  \"adresse\": \"Rue Test\",\n  \"telephone\": \"71000001\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -106,33 +105,14 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('PUT renvoie 200', () => pm.response.to.have.status(200));"
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
             ]
           }
         }
       ]
     },
     {
-      "name": "Agences - DELETE supprimer",
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "url": "{{baseUrl}}/api/agences/{{agenceId}}"
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('DELETE renvoie 204', () => pm.response.to.have.status(204));"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "Clients - POST creer",
+      "name": "Agence - POST invalid (400)",
       "request": {
         "method": "POST",
         "header": [
@@ -141,10 +121,10 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/clients",
+        "url": "{{baseUrl}}/agences",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nom\": \"Test\",\n  \"prenom\": \"Postman\",\n  \"email\": \"postman.client@example.com\",\n  \"telephone\": \"22000000\",\n  \"numPermis\": \"PM-TEST-001\",\n  \"dateInscription\": \"2026-01-01\"\n}",
+          "raw": "{\n  \"nom\": \"\",\n  \"ville\": \"Tunis\",\n  \"adresse\": \"Avenue Test\",\n  \"telephone\": \"71000000\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -158,55 +138,15 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('POST renvoie 200', () => pm.response.to.have.status(200));",
-              "const entity = pm.response.json(); pm.expect(entity.idClient).to.exist;",
-              "pm.collectionVariables.set('clientId', entity.idClient);"
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "pm.expect(pm.response.json().statut).to.eql(400);"
             ]
           }
         }
       ]
     },
     {
-      "name": "Clients - GET tous",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": "{{baseUrl}}/api/clients"
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('GET tous renvoie 200', () => pm.response.to.have.status(200));",
-              "pm.expect(pm.response.json()).to.be.an('array');"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "Clients - GET par ID",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": "{{baseUrl}}/api/clients/{{clientId}}"
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('GET par ID renvoie 200', () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "Clients - PUT modifier",
+      "name": "Agence - PUT invalid (400)",
       "request": {
         "method": "PUT",
         "header": [
@@ -215,10 +155,10 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/clients/{{clientId}}",
+        "url": "{{baseUrl}}/agences/{{agenceId}}",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nom\": \"TestModifi?\",\n  \"prenom\": \"Postman\",\n  \"email\": \"postman.client@example.com\",\n  \"telephone\": \"22000001\",\n  \"numPermis\": \"PM-TEST-001\",\n  \"dateInscription\": \"2026-01-01\"\n}",
+          "raw": "{\n  \"nom\": \"\",\n  \"ville\": \"Tunis\",\n  \"adresse\": \"Avenue Test\",\n  \"telephone\": \"71000000\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -232,18 +172,18 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('PUT renvoie 200', () => pm.response.to.have.status(200));"
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
             ]
           }
         }
       ]
     },
     {
-      "name": "Clients - DELETE supprimer",
+      "name": "Agence - GET missing (404)",
       "request": {
-        "method": "DELETE",
+        "method": "GET",
         "header": [],
-        "url": "{{baseUrl}}/api/clients/{{clientId}}"
+        "url": "{{baseUrl}}/agences/999999"
       },
       "event": [
         {
@@ -251,14 +191,67 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('DELETE renvoie 204', () => pm.response.to.have.status(204));"
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+              "pm.expect(pm.response.json().statut).to.eql(404);"
             ]
           }
         }
       ]
     },
     {
-      "name": "Vehicules - POST creer",
+      "name": "Agence - PUT missing (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/agences/999999",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"Agence Atelier Modifiee\",\n  \"ville\": \"Ariana\",\n  \"adresse\": \"Rue Test\",\n  \"telephone\": \"71000001\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agence - DELETE missing (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/agences/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Client - POST create",
       "request": {
         "method": "POST",
         "header": [
@@ -267,10 +260,10 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/vehicules",
+        "url": "{{baseUrl}}/clients",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"immatriculation\": \"TEST-001\",\n  \"marque\": \"Renault\",\n  \"modele\": \"Clio\",\n  \"categorie\": \"CITADINE\",\n  \"tarifJournalier\": 120.0,\n  \"statut\": \"DISPONIBLE\"\n}",
+          "raw": "{\n  \"nom\": \"Client\",\n  \"prenom\": \"Atelier\",\n  \"email\": \"client@example.com\",\n  \"telephone\": \"22000000\",\n  \"numPermis\": \"PERMIS-001\",\n  \"dateInscription\": \"2026-01-01\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -284,20 +277,19 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('POST renvoie 200', () => pm.response.to.have.status(200));",
-              "const entity = pm.response.json(); pm.expect(entity.idVehicule).to.exist;",
-              "pm.collectionVariables.set('vehiculeId', entity.idVehicule);"
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "const x=pm.response.json(); pm.expect(x.idClient).to.exist; pm.collectionVariables.set('clientId',x.idClient);"
             ]
           }
         }
       ]
     },
     {
-      "name": "Vehicules - GET tous",
+      "name": "Client - GET list",
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{baseUrl}}/api/vehicules"
+        "url": "{{baseUrl}}/clients"
       },
       "event": [
         {
@@ -305,7 +297,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('GET tous renvoie 200', () => pm.response.to.have.status(200));",
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
               "pm.expect(pm.response.json()).to.be.an('array');"
             ]
           }
@@ -313,11 +305,11 @@
       ]
     },
     {
-      "name": "Vehicules - GET par ID",
+      "name": "Client - GET by id",
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{baseUrl}}/api/vehicules/{{vehiculeId}}"
+        "url": "{{baseUrl}}/clients/{{clientId}}"
       },
       "event": [
         {
@@ -325,14 +317,14 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('GET par ID renvoie 200', () => pm.response.to.have.status(200));"
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
             ]
           }
         }
       ]
     },
     {
-      "name": "Vehicules - PUT modifier",
+      "name": "Client - PUT update",
       "request": {
         "method": "PUT",
         "header": [
@@ -341,10 +333,10 @@
             "value": "application/json"
           }
         ],
-        "url": "{{baseUrl}}/api/vehicules/{{vehiculeId}}",
+        "url": "{{baseUrl}}/clients/{{clientId}}",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"immatriculation\": \"TEST-001\",\n  \"marque\": \"Renault\",\n  \"modele\": \"Clio Test\",\n  \"categorie\": \"CITADINE\",\n  \"tarifJournalier\": 125.0,\n  \"statut\": \"DISPONIBLE\"\n}",
+          "raw": "{\n  \"nom\": \"Client Modifie\",\n  \"prenom\": \"Atelier\",\n  \"email\": \"client@example.com\",\n  \"telephone\": \"22000001\",\n  \"numPermis\": \"PERMIS-001\",\n  \"dateInscription\": \"2026-01-01\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -358,18 +350,32 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('PUT renvoie 200', () => pm.response.to.have.status(200));"
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
             ]
           }
         }
       ]
     },
     {
-      "name": "Vehicules - DELETE supprimer",
+      "name": "Client - POST invalid (400)",
       "request": {
-        "method": "DELETE",
-        "header": [],
-        "url": "{{baseUrl}}/api/vehicules/{{vehiculeId}}"
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/clients",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"\",\n  \"prenom\": \"Atelier\",\n  \"email\": \"client@example.com\",\n  \"telephone\": \"22000000\",\n  \"numPermis\": \"PERMIS-001\",\n  \"dateInscription\": \"2026-01-01\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
       },
       "event": [
         {
@@ -377,7 +383,1810 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('DELETE renvoie 204', () => pm.response.to.have.status(204));"
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "pm.expect(pm.response.json().statut).to.eql(400);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Client - PUT invalid (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/clients/{{clientId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"\",\n  \"prenom\": \"Atelier\",\n  \"email\": \"client@example.com\",\n  \"telephone\": \"22000000\",\n  \"numPermis\": \"PERMIS-001\",\n  \"dateInscription\": \"2026-01-01\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Client - GET missing (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/clients/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+              "pm.expect(pm.response.json().statut).to.eql(404);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Client - PUT missing (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/clients/999999",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"Client Modifie\",\n  \"prenom\": \"Atelier\",\n  \"email\": \"client@example.com\",\n  \"telephone\": \"22000001\",\n  \"numPermis\": \"PERMIS-001\",\n  \"dateInscription\": \"2026-01-01\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Client - DELETE missing (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/clients/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - POST create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehicules",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"immatriculation\": \"TEST-001\",\n  \"marque\": \"Renault\",\n  \"modele\": \"Clio\",\n  \"categorie\": \"CITADINE\",\n  \"tarifJournalier\": 120,\n  \"statut\": \"DISPONIBLE\",\n  \"agence\": {\n    \"idAgence\": \"{{agenceId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "const x=pm.response.json(); pm.expect(x.idVehicule).to.exist; pm.collectionVariables.set('vehiculeId',x.idVehicule);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - GET list",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/vehicules"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.expect(pm.response.json()).to.be.an('array');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - GET by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/vehicules/{{vehiculeId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - PUT update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehicules/{{vehiculeId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"immatriculation\": \"TEST-001\",\n  \"marque\": \"Renault\",\n  \"modele\": \"Clio Modifie\",\n  \"categorie\": \"CITADINE\",\n  \"tarifJournalier\": 125,\n  \"statut\": \"DISPONIBLE\",\n  \"agence\": {\n    \"idAgence\": \"{{agenceId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - POST invalid (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehicules",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"immatriculation\": \"TEST-002\",\n  \"marque\": \"Renault\",\n  \"modele\": \"Clio\",\n  \"categorie\": \"CITADINE\",\n  \"tarifJournalier\": -1,\n  \"statut\": \"DISPONIBLE\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "pm.expect(pm.response.json().statut).to.eql(400);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - PUT invalid (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehicules/{{vehiculeId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"immatriculation\": \"TEST-002\",\n  \"marque\": \"Renault\",\n  \"modele\": \"Clio\",\n  \"categorie\": \"CITADINE\",\n  \"tarifJournalier\": -1,\n  \"statut\": \"DISPONIBLE\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - GET missing (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/vehicules/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+              "pm.expect(pm.response.json().statut).to.eql(404);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - PUT missing (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/vehicules/999999",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"immatriculation\": \"TEST-001\",\n  \"marque\": \"Renault\",\n  \"modele\": \"Clio Modifie\",\n  \"categorie\": \"CITADINE\",\n  \"tarifJournalier\": 125,\n  \"statut\": \"DISPONIBLE\",\n  \"agence\": {\n    \"idAgence\": \"{{agenceId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - DELETE missing (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/vehicules/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - POST create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/employes",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"Employe\",\n  \"prenom\": \"Atelier\",\n  \"role\": \"AGENT\",\n  \"agence\": {\n    \"idAgence\": \"{{agenceId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "const x=pm.response.json(); pm.expect(x.idEmploye).to.exist; pm.collectionVariables.set('employeId',x.idEmploye);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - GET list",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/employes"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.expect(pm.response.json()).to.be.an('array');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - GET by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/employes/{{employeId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - PUT update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/employes/{{employeId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"Employe Modifie\",\n  \"prenom\": \"Atelier\",\n  \"role\": \"MANAGER\",\n  \"agence\": {\n    \"idAgence\": \"{{agenceId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - POST invalid (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/employes",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"\",\n  \"prenom\": \"Atelier\",\n  \"role\": \"AGENT\",\n  \"agence\": {\n    \"idAgence\": \"{{agenceId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "pm.expect(pm.response.json().statut).to.eql(400);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - PUT invalid (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/employes/{{employeId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"\",\n  \"prenom\": \"Atelier\",\n  \"role\": \"AGENT\",\n  \"agence\": {\n    \"idAgence\": \"{{agenceId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - GET missing (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/employes/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+              "pm.expect(pm.response.json().statut).to.eql(404);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - PUT missing (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/employes/999999",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"Employe Modifie\",\n  \"prenom\": \"Atelier\",\n  \"role\": \"MANAGER\",\n  \"agence\": {\n    \"idAgence\": \"{{agenceId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - DELETE missing (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/employes/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - POST create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/equipements",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"libelle\": \"GPS\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "const x=pm.response.json(); pm.expect(x.idEquipement).to.exist; pm.collectionVariables.set('equipementId',x.idEquipement);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - GET list",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/equipements"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.expect(pm.response.json()).to.be.an('array');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - GET by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/equipements/{{equipementId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - PUT update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/equipements/{{equipementId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"libelle\": \"GPS Modifie\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - POST invalid (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/equipements",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"libelle\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "pm.expect(pm.response.json().statut).to.eql(400);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - PUT invalid (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/equipements/{{equipementId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"libelle\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - GET missing (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/equipements/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+              "pm.expect(pm.response.json().statut).to.eql(404);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - PUT missing (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/equipements/999999",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"libelle\": \"GPS Modifie\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - DELETE missing (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/equipements/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - POST create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/maintenances",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-02-01\",\n  \"dateFin\": \"2026-02-02\",\n  \"description\": \"Entretien test\",\n  \"cout\": 40,\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "const x=pm.response.json(); pm.expect(x.idMaintenance).to.exist; pm.collectionVariables.set('maintenanceId',x.idMaintenance);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - GET list",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/maintenances"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.expect(pm.response.json()).to.be.an('array');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - GET by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/maintenances/{{maintenanceId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - PUT update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/maintenances/{{maintenanceId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-02-01\",\n  \"dateFin\": \"2026-02-03\",\n  \"description\": \"Entretien modifie\",\n  \"cout\": 45,\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - POST invalid (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/maintenances",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-02-02\",\n  \"dateFin\": \"2026-02-01\",\n  \"description\": \"Date invalide\",\n  \"cout\": 40,\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "pm.expect(pm.response.json().statut).to.eql(400);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - PUT invalid (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/maintenances/{{maintenanceId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-02-02\",\n  \"dateFin\": \"2026-02-01\",\n  \"description\": \"Date invalide\",\n  \"cout\": 40,\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - GET missing (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/maintenances/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+              "pm.expect(pm.response.json().statut).to.eql(404);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - PUT missing (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/maintenances/999999",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-02-01\",\n  \"dateFin\": \"2026-02-03\",\n  \"description\": \"Entretien modifie\",\n  \"cout\": 45,\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - DELETE missing (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/maintenances/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - POST create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/reservations",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-03-01\",\n  \"dateFin\": \"2026-03-04\",\n  \"statut\": \"CONFIRMEE\",\n  \"client\": {\n    \"idClient\": \"{{clientId}}\"\n  },\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "const x=pm.response.json(); pm.expect(x.idReservation).to.exist; pm.collectionVariables.set('reservationId',x.idReservation);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - GET list",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/reservations"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.expect(pm.response.json()).to.be.an('array');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - GET by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/reservations/{{reservationId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - PUT update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/reservations/{{reservationId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-03-01\",\n  \"dateFin\": \"2026-03-05\",\n  \"statut\": \"CONFIRMEE\",\n  \"client\": {\n    \"idClient\": \"{{clientId}}\"\n  },\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - POST invalid (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/reservations",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-03-04\",\n  \"dateFin\": \"2026-03-01\",\n  \"statut\": \"CONFIRMEE\",\n  \"client\": {\n    \"idClient\": \"{{clientId}}\"\n  },\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "pm.expect(pm.response.json().statut).to.eql(400);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - PUT invalid (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/reservations/{{reservationId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-03-04\",\n  \"dateFin\": \"2026-03-01\",\n  \"statut\": \"CONFIRMEE\",\n  \"client\": {\n    \"idClient\": \"{{clientId}}\"\n  },\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - GET missing (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/reservations/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+              "pm.expect(pm.response.json().statut).to.eql(404);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - PUT missing (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/reservations/999999",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateDebut\": \"2026-03-01\",\n  \"dateFin\": \"2026-03-05\",\n  \"statut\": \"CONFIRMEE\",\n  \"client\": {\n    \"idClient\": \"{{clientId}}\"\n  },\n  \"vehicule\": {\n    \"idVehicule\": \"{{vehiculeId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - DELETE missing (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/reservations/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat - POST with cascade payments",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/contrats",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateSignature\": \"2026-04-01\",\n  \"montantTotal\": 480,\n  \"valide\": true,\n  \"paiements\": [\n    {\n      \"montant\": 150,\n      \"datePaiement\": \"2026-04-01\",\n      \"modePaiement\": \"CARTE\"\n    },\n    {\n      \"montant\": 330,\n      \"datePaiement\": \"2026-04-02\",\n      \"modePaiement\": \"VIREMENT\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "const c=pm.response.json(); pm.collectionVariables.set('contratId',c.idContrat); pm.expect(c.paiements).to.have.length(2); pm.collectionVariables.set('paiementId',c.paiements[0].idPaiement);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat - GET list",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/contrats"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat - GET by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/contrats/{{contratId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat - PUT update without replacing payments",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/contrats/{{contratId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateSignature\": \"2026-04-01\",\n  \"montantTotal\": 520,\n  \"valide\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.expect(pm.response.json().paiements).to.have.length(2);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat - POST invalid amount (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/contrats",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateSignature\": \"2026-04-01\",\n  \"montantTotal\": -5,\n  \"valide\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat - GET missing (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/contrats/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat - PUT missing (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/contrats/999999",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dateSignature\": \"2026-04-01\",\n  \"montantTotal\": 520,\n  \"valide\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Paiement - GET list",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/paiements"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.expect(pm.response.json()).to.have.length(2);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Paiement - GET by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/paiements/{{paiementId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Paiement - GET missing (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/paiements/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Paiement - POST refused (405, read only)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/paiements",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"montant\": 1,\n  \"datePaiement\": \"2026-04-01\",\n  \"modePaiement\": \"CARTE\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 405', () => pm.response.to.have.status(405));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat - DELETE cascade",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/contrats/{{contratId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Paiement - GET removed by cascade (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/paiements/{{paiementId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat - DELETE missing (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/contrats/999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation - DELETE",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/reservations/{{reservationId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maintenance - DELETE",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/maintenances/{{maintenanceId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employe - DELETE",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/employes/{{employeId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicule - DELETE",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/vehicules/{{vehiculeId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipement - DELETE",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/equipements/{{equipementId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Client - DELETE",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/clients/{{clientId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agence - DELETE",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/agences/{{agenceId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 204', () => pm.response.to.have.status(204));"
             ]
           }
         }
@@ -387,7 +2196,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8081"
+      "value": "http://localhost:8080/api"
     },
     {
       "key": "agenceId",
@@ -399,6 +2208,30 @@
     },
     {
       "key": "vehiculeId",
+      "value": ""
+    },
+    {
+      "key": "employeId",
+      "value": ""
+    },
+    {
+      "key": "equipementId",
+      "value": ""
+    },
+    {
+      "key": "maintenanceId",
+      "value": ""
+    },
+    {
+      "key": "reservationId",
+      "value": ""
+    },
+    {
+      "key": "contratId",
+      "value": ""
+    },
+    {
+      "key": "paiementId",
       "value": ""
     }
   ]

@@ -1,25 +1,26 @@
 package tn.esprit.autoloc.web.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import tn.esprit.autoloc.domain.Vehicule;
 import tn.esprit.autoloc.service.IVehiculeService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vehicules")
-@Tag(name = "Vehicules", description = "Gestion des vehicules de location")
+@RequiredArgsConstructor
+@RequestMapping("/vehicules")
+@Tag(name = "Vehicules", description = "Gestion des vehicules")
 public class VehiculeController {
     private final IVehiculeService service;
-
-    public VehiculeController(IVehiculeService service) {
-        this.service = service;
-    }
 
     @GetMapping
     @Operation(summary = "Lister les vehicules")
@@ -29,46 +30,44 @@ public class VehiculeController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Consulter un vehicule")
+    @Operation(summary = "Consulter un(e) vehicule")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Vehicule trouve"),
-            @ApiResponse(responseCode = "404", description = "Vehicule introuvable")
+            @ApiResponse(responseCode = "200", description = "Ressource trouvee"),
+            @ApiResponse(responseCode = "404", description = "Ressource introuvable")
     })
-    public ResponseEntity<Vehicule> getById(@PathVariable Long id) {
-        return ResponseEntity.of(service.getById(id));
+    public Vehicule getById(@Parameter(description = "Identifiant") @PathVariable Long id) {
+        return service.getRequiredById(id);
     }
 
     @PostMapping
-    @Operation(summary = "Creer un vehicule")
-    @ApiResponse(responseCode = "200", description = "Vehicule cree")
-    public Vehicule create(@RequestBody Vehicule vehicule) {
-        return service.save(vehicule);
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Creer un(e) vehicule")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Ressource creee"),
+            @ApiResponse(responseCode = "400", description = "Donnees invalides")
+    })
+    public Vehicule create(@Valid @RequestBody Vehicule vehicule) {
+        return service.create(vehicule);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Modifier un vehicule")
+    @Operation(summary = "Modifier un(e) vehicule")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Vehicule mis a jour"),
-            @ApiResponse(responseCode = "404", description = "Vehicule introuvable")
+            @ApiResponse(responseCode = "200", description = "Ressource mise a jour"),
+            @ApiResponse(responseCode = "400", description = "Donnees invalides"),
+            @ApiResponse(responseCode = "404", description = "Ressource introuvable")
     })
-    public ResponseEntity<Vehicule> update(@PathVariable Long id, @RequestBody Vehicule vehicule) {
-        if (service.getById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        vehicule.setIdVehicule(id);
-        return ResponseEntity.ok(service.save(vehicule));
+    public ResponseEntity<Vehicule> update(@Parameter(description = "Identifiant") @PathVariable Long id, @Valid @RequestBody Vehicule vehicule) {
+        return ResponseEntity.ok(service.update(id, vehicule));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Supprimer un vehicule")
+    @Operation(summary = "Supprimer un(e) vehicule")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Vehicule supprime"),
-            @ApiResponse(responseCode = "404", description = "Vehicule introuvable")
+            @ApiResponse(responseCode = "204", description = "Ressource supprimee"),
+            @ApiResponse(responseCode = "404", description = "Ressource introuvable")
     })
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (service.getById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> delete(@Parameter(description = "Identifiant") @PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
