@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.autoloc.domain.Contrat;
+import tn.esprit.autoloc.dto.ContratDTO;
+import java.time.LocalDate;
 import tn.esprit.autoloc.service.IContratService;
 
 import java.util.List;
@@ -70,5 +72,12 @@ public class ContratController {
     public ResponseEntity<Void> delete(@Parameter(description = "Identifiant") @PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/affecter-reservation")
+    public ContratDTO affecterContratAReservation(@RequestParam LocalDate dateSignature,
+                                                  @RequestParam LocalDate dateDebut,
+                                                  @RequestParam LocalDate dateFin) {
+        return service.affecterContratAReservation(dateSignature, dateDebut, dateFin);
     }
 }

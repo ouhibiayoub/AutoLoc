@@ -4,6 +4,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.autoloc.domain.Vehicule;
 import tn.esprit.autoloc.domain.Equipement;
+import tn.esprit.autoloc.domain.Maintenance;
+import tn.esprit.autoloc.dto.VehiculeDTO;
+import tn.esprit.autoloc.repository.IMaintenanceRepository;
+import java.time.LocalDate;
 
 import java.util.ArrayList;
 
@@ -24,11 +28,13 @@ public class VehiculeServiceImpl implements IVehiculeService {
 
     private final IAgenceRepository agenceRepository;
     private final IEquipementRepository equipementRepository;
+    private final IMaintenanceRepository maintenanceRepository;
 
-    public VehiculeServiceImpl(IVehiculeRepository repository, IAgenceRepository agenceRepository, IEquipementRepository equipementRepository) {
+    public VehiculeServiceImpl(IVehiculeRepository repository, IAgenceRepository agenceRepository, IEquipementRepository equipementRepository, IMaintenanceRepository maintenanceRepository) {
         this.repository = repository;
         this.agenceRepository = agenceRepository;
         this.equipementRepository = equipementRepository;
+        this.maintenanceRepository = maintenanceRepository;
     }
 
     @Override
@@ -79,5 +85,46 @@ public class VehiculeServiceImpl implements IVehiculeService {
     private List<Equipement> resolveEquipements(List<Equipement> values) {
         if (values == null) return new ArrayList<>();
         return values.stream().map(v -> ServiceSupport.reference(equipementRepository, v.getIdEquipement(), "Equipement")).toList();
+    }
+
+    @Override
+    public VehiculeDTO affecterVehiculeAEquipement(Long idVehicule, Long idEquipement) {
+        Vehicule vehicule = getRequiredById(idVehicule);
+        Equipement equipement = ServiceSupport.reference(equipementRepository, idEquipement, "Equipement");
+        if (vehicule.getEquipements() == null) vehicule.setEquipements(new ArrayList<>());
+        boolean dejaAffecte = vehicule.getEquipements().stream()
+                .anyMatch(e -> e.getIdEquipement().equals(idEquipement));
+        if (!dejaAffecte) vehicule.getEquipements().add(equipement);
+        return toVehiculeDTO(repository.save(vehicule));
+    }
+
+    @Override
+    public VehiculeDTO affecterMaintenanceAvehicule(String description, String immatriculation) {
+        if (description == null || description.isBlank())
+            throw new IllegalArgumentException("La description de la maintenance est obligatoire");
+        if (immatriculation == null || immatriculation.isBlank())
+            throw new IllegalArgumentException("L'immatriculation est obligatoire");
+        Vehicule vehicule = repository.findByImmatriculationIgnoreCase(immatriculation)
+                .orElseThrow(() -> new ResourceNotFoundException("Véhicule introuvable: " + immatriculation));
+        LocalDate aujourdhui = LocalDate.now();
+        Maintenance maintenance = new Maintenance();
+        maintenance.setDescription(description);
+        maintenance.setDateDebut(aujourdhui);
+        maintenance.setDateFin(aujourdhui);
+        maintenance.setVehicule(vehicule);
+        maintenanceRepository.save(maintenance);
+        return toVehiculeDTO(vehicule);
+    }
+
+    private VehiculeDTO toVehiculeDTO(Vehicule vehicule) {
+        VehiculeDTO dto = new VehiculeDTO();
+        dto.setIdVehicule(vehicule.getIdVehicule());
+        dto.setMarque(vehicule.getMarque());
+        dto.setModele(vehicule.getModele());
+        dto.setImmatriculation(vehicule.getImmatriculation());
+        dto.setCategorie(vehicule.getCategorie());
+        dto.setStatut(vehicule.getStatut());
+        dto.setPrixJournalier(vehicule.getTarifJournalier());
+        return dto;
     }
 }

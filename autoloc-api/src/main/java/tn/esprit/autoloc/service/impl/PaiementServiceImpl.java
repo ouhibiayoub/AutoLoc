@@ -6,8 +6,8 @@ import tn.esprit.autoloc.domain.Paiement;
 import tn.esprit.autoloc.domain.Contrat;
 import tn.esprit.autoloc.dto.PaiementDTO;
 import tn.esprit.autoloc.exception.ResourceNotFoundException;
-import tn.esprit.autoloc.repository.IPaiementRepository;
 import tn.esprit.autoloc.repository.IContratRepository;
+import tn.esprit.autoloc.repository.IPaiementRepository;
 import tn.esprit.autoloc.service.ServiceSupport;
 import tn.esprit.autoloc.service.IPaiementService;
 

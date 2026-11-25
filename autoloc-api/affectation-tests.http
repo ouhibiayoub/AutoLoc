@@ -1,0 +1,4 @@
+
+### Vérifier que l'API fonctionne
+GET http://localhost:8081/api/v3/api-docs
+Accept: application/json
